@@ -1,0 +1,11 @@
+openai
+transformers
+peft
+datasets
+whisper
+accelerate
+soundfile==0.12.0
+einops
+evaluate
+jiwer
+opencc

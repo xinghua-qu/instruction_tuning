@@ -1,0 +1,19 @@
+data:
+    name: "covost2"
+    version: "en_zh-CN"
+    dir: '/mnt/bn/multimodal-moderation-xh/Data/ast_datasets/common_voice_4/'
+    eval_num: 1000
+        
+model:
+    asr_model: 'whisper' 
+    asr_model_version: 'openai/whisper-large-v2'
+    api: False
+    llm: 'falcon'
+    llm_version: '7b'
+    max_length: 200
+    prompt: "You are a professional machine translator. Translate the following English text to Chinese.  {}"
+    
+trainer:
+    name: 'test'
+    
+    

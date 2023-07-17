@@ -1,0 +1,20 @@
+data:
+    name: "covost2"
+    version: "en_zh-CN"
+    dir: '/mnt/bn/multimodal-moderation-xh/Data/ast_datasets/common_voice_4/'
+    eval_num: 1000
+    max_length: 50
+        
+model:
+    llm: 'bloom'
+    llm_version: '560m'
+    max_length: 200
+    prompt: "Translate the following English text to Chinese. <<<{}>>>"
+    
+trainer:
+    lr: 0.0005
+    num_epoch: 20
+    bacth_size: 4
+
+    
+    
