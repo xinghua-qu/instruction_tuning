@@ -27,5 +27,5 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
 
 
 def set_openaikey():
-    openai.api_key  = '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'
+    openai.api_key  = 'Your OPENAI keys'
     return None
