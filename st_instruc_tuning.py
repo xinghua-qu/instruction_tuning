@@ -21,7 +21,8 @@ def main(config):
     wandb.init(
       project="mt-peft-lora", 
       group="xinghua_ast",
-      name=f"test2", 
+      name=f"test2",
+      sync_tensorboard=True,
       config={
         "learning_rate": config.trainer.lr,
         "epochs": config.trainer,
@@ -89,6 +90,7 @@ def main(config):
     )
     
     step = 0
+    print(config.trainer.num_epoch)
     for epoch in range(config.trainer.num_epoch):
         model.train()
         total_loss = 0
@@ -97,6 +99,7 @@ def main(config):
             outputs = model(**batch)
             loss = outputs.loss
             loss.backward()
+            total_loss += loss.detach().float()
             optimizer.step()
             lr_scheduler.step()
             optimizer.zero_grad()
@@ -119,32 +122,14 @@ def main(config):
             )            
             wandb.log({"test loss": loss})
 
-        eval_epoch_loss = eval_loss / len(eval_dataloader)
+        eval_epoch_loss = eval_loss / len(test_dataloader)
         eval_ppl = torch.exp(eval_epoch_loss)
         train_epoch_loss = total_loss / len(train_dataloader)
         train_ppl = torch.exp(train_epoch_loss)
         print(f"{epoch=}: {train_ppl=} {train_epoch_loss=} {eval_ppl=} {eval_epoch_loss=}")
+    save_path = f'{config.model.llm}_{config.model.llm_version}_fine_tuned.pth'
+    torch.save(model.state_dict(), save_path)
     wandb.finish()
-    
-
-#     trainer = Trainer(
-#         model=model, 
-#         train_dataset=ast_data['train'],
-#         args=TrainingArguments(
-#             per_device_train_batch_size=4, 
-#             gradient_accumulation_steps=4,
-#             warmup_steps=100, 
-#             max_steps=200, 
-#             learning_rate=2e-4, 
-#             fp16=True,
-#             logging_steps=1, 
-#             report_to=None,
-#             output_dir='outputs'
-#         ),
-#         data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False)
-#         )
-# #     model.config.use_cache = False  # silence the warnings. Please re-enable for inference!
-#     trainer.train()
     
 
 if __name__ == '__main__':
